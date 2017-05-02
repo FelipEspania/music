@@ -11,20 +11,29 @@ import { User } from './models/user';
 export class AppComponent implements OnInit{
   public title = 'Music!';
   public user: User;
+  public user_register: User;
   public identity;
   public token;
   public errorMessage;
+  public alertRegister;
 
   constructor(
     private _userService:UserService
   ){
     this.user = new User('','','','','','ROLE_USER','');
+    this.user_register = new User('','','','','','ROLE_USER','');
   }
 
+  //Al iniciar la pagina angular obtendra la identificacion y el token
   ngOnInit(){
-    
+    this.identity = this._userService.getIdentity();
+    this.token = this._userService.getToken();
+
+    console.log(this.identity);
+    console.log(this.token)
   }
 
+  //Al identificarse realizara lo que se encuentre aca.
   public onSubmit(){
     console.log(this.user);
     //Conseguir los datos del usuario identificado
@@ -37,6 +46,7 @@ export class AppComponent implements OnInit{
           alert("El usuario no esta correctamente logeado");
         }else{
           // Crear elemento en el localStorage para tener al usuario sesion
+          localStorage.setItem('identity', JSON.stringify(identity));
 
           // Conseguir el token para enviarselo a cada peticion http
           this._userService.signup(this.user, 'true').subscribe(
@@ -48,10 +58,8 @@ export class AppComponent implements OnInit{
                 alert("El token no se ha generado correctamente");
               }else{
                 // Crear elemento en el localStorage para tener token disponible
-
-                // Conseguir el token para enviarselo a cada peticion http
-                console.log(token);
-                console.log(identity);              
+                localStorage.setItem('token', token);
+                this.user = new User('','','','','','ROLE_USER','');           
               }
             },
             error => {
@@ -75,5 +83,43 @@ export class AppComponent implements OnInit{
         }
       }
     );
+  }
+  
+  //al cerrar sesion eliminar todo del usuario en el localstorage
+  logout(){
+    localStorage.removeItem('identity');
+    localStorage.removeItem('token');
+    localStorage.clear();
+    this.identity = null;
+    this.token = null;
+  }
+
+  //Para registrarse
+  onSubmitRegister(){
+    console.log(this.user_register);
+
+    this._userService.register(this.user_register).subscribe(
+      response =>{
+        let user = response.user;
+        this.user_register = user;
+
+        if(!user._id){
+          this.alertRegister = 'Error al registrarse';
+        }else{
+          this.alertRegister = 'El registro se ha realizado correctamente, identificate con ' + this.user_register.email;
+          this.user_register = new User('','','','','','ROLE_USER','');
+        }
+
+      },
+      error =>{
+        var errorMessage = <any>error;
+        
+        if (errorMessage != null) {
+          var body = JSON.parse(error._body);
+          this.alertRegister = body.message;
+          console.log(error);
+        }
+      }
+    )
   }
 }
