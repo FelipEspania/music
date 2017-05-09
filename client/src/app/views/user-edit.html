@@ -1,8 +1,8 @@
 <div class="col-lg-6">
     <h1>{{ titulo }}</h1>
-    <div *ngIf="alertUpdate">
+    <div *ngIf="alertMessage">
         <div class="alert alert-info">
-        {{ alertUpdate }}
+        {{ alertMessage }}
         </div>
     </div>
     <form #userUpdateForm="ngForm" (ngSubmit)="onSubmit()" class="col-md-10">
@@ -20,6 +20,14 @@
             <label>Email</label>
             <input type="email" #email="ngModel" name="email" [(ngModel)]="user.email" class="form-control" required />
             <span *ngIf="!email.valid && email.touched">Email es obligatorio</span>
+        </p>
+
+        <div class="image_for_edit" *ngIf="user.image && user.image != 'null'">
+            <img src="{{url + 'get-image-user/' + user.image}}" style="width: 50px"/>
+        </div>
+        <p>
+            <label>Sube tu foto:</label>
+            <input type="file" placeholder="Subir imagen..." (change)="fileChangeEvent($event)" />
         </p>
         <input type="submit" value="Actualizar" class="btn btn-primary" />
     </form>

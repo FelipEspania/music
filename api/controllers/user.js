@@ -21,7 +21,7 @@ function saveUser(req, res) {
     user.name = params.name;
     user.surname = params.surname;
     user.email = params.email;
-    user.role = 'ROLE_ADMIN';
+    user.role = 'ROLE_USER';
     user.image = 'null';
 
     //para encriptar la password y guardar el usuario
@@ -91,6 +91,10 @@ function updateUser(req, res) {
     //recogemos los datos atraves del body
     let userId = req.params.id;
     let update = req.body;
+    //verificamos que el user id consida con el del middleware
+    if (userId != req.user.sub) {
+        return res.status(500).send({ message: 'No tienes permisos para actualizar usuario' });
+    }
     //buscamos el usuario por el id, comprobamos errores y lo actualizamos
     User.findByIdAndUpdate(userId, update, function (err, userUpdated) {
         if (err){
