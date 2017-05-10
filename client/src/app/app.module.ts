@@ -2,10 +2,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
-import { ArtistListComponent } from './components/artist-list.component';
 import { routing, appRoutingProviders } from './app.routing';
+
 import { AppComponent } from './app.component';
+
+import { HomeComponent } from './components/home.component';
+import { ArtistListComponent } from './components/artist-list.component';
 import { UserEditComponent } from './components/user-edit.component';
 
 
@@ -13,7 +15,8 @@ import { UserEditComponent } from './components/user-edit.component';
   declarations: [
     AppComponent,
     UserEditComponent,
-    ArtistListComponent
+    ArtistListComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
