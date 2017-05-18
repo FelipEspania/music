@@ -6,65 +6,65 @@ import { GLOBAL } from './global'
 import { Artist } from '../models/artist';
 
 @Injectable()
-export class ArtistService{
+export class ArtistService {
     public url: string;
 
-    constructor(private _http: Http){
+    constructor(private _http: Http) {
         this.url = GLOBAL.url;
     }
     //obtener artistas
-    getArtists(token, page){
+    getArtists(token, page) {
         let headers = new Headers({
-            'Content-Type':'application/json',
-            'Authorization':token
+            'Content-Type': 'application/json',
+            'Authorization': token
         });
 
         let options = new RequestOptions({ headers: headers });
-        return this._http.get(this.url+'artists/'+page, options)
-                         .map(res => res.json());
+        return this._http.get(this.url + 'artists/' + page, options)
+            .map(res => res.json());
     }
     //obtener EL artista
-    getArtist(token, id: string){
+    getArtist(token, id: string) {
         let headers = new Headers({
-            'Content-Type':'application/json',
-            'Authorization':token
+            'Content-Type': 'application/json',
+            'Authorization': token
         });
 
         let options = new RequestOptions({ headers: headers });
-        return this._http.get(this.url+'artist/'+id, options)
-                         .map(res => res.json());
+        return this._http.get(this.url + 'artist/' + id, options)
+            .map(res => res.json());
     }
     //editar artista
-    editArtist(token, id: string, artist: Artist){
+    editArtist(token, id: string, artist: Artist) {
         let params = JSON.stringify(artist);
         let headers = new Headers({
-            'Content-Type':'application/json',
-            'Authorization':token
+            'Content-Type': 'application/json',
+            'Authorization': token
         });
 
-        return this._http.put(this.url+'artist/'+id, params, {headers: headers})
-                         .map(res => res.json());
+        return this._http.put(this.url + 'artist/' + id, params, { headers: headers })
+            .map(res => res.json());
     }
     //agregar artista
-    addArtist(token, artist: Artist){
+    addArtist(token, artist: Artist) {
         let params = JSON.stringify(artist);
         let headers = new Headers({
-            'Content-Type':'application/json',
-            'Authorization':token
+            'Content-Type': 'application/json',
+            'Authorization': token
         });
 
-        return this._http.post(this.url+'artist', params, {headers: headers})
-                         .map(res => res.json());
+        return this._http.post(this.url + 'artist', params, { headers: headers })
+            .map(res => res.json());
     }
     //Eliminar artista
-    deleteArtist(token, id: string){
+    deleteArtist(token, id: string) {
         let headers = new Headers({
-            'Content-Type':'application/json',
-            'Authorization':token
+            'Content-Type': 'application/json',
+            'Authorization': token
         });
 
         let options = new RequestOptions({ headers: headers });
-        return this._http.delete(this.url+'artist/'+id, options)
-                         .map(res => res.json());
+        return this._http.delete(this.url + 'artist/' + id, options)
+            .map(res => res.json());
     }
 }

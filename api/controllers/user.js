@@ -1,9 +1,9 @@
-const fs = require('fs');
-const path = require('path');
-const bcrypt = require('bcrypt-nodejs'); //requiere para encriptar la password
-const jwt = require('../services/jwt'); //requiere el servicio creado para el token
+var fs = require('fs');
+var path = require('path');
+var bcrypt = require('bcrypt-nodejs'); //requiere para encriptar la password
+var jwt = require('../services/jwt'); //requiere el servicio creado para el token
 
-let User = require('../models/user'); //llamar al modelo antes creado
+var User = require('../models/user'); //llamar al modelo antes creado
 
 function pruebas (req, res) {
     res.status(200).send({
@@ -12,8 +12,8 @@ function pruebas (req, res) {
 }
 //funcion para recibir e insertar datos a la BD
 function saveUser(req, res) {
-    let user = new User(); //crear objeto y asi poder darle los datos a insertar
-    let params = req.body; //recoger los datos que se le esta mandando
+    var user = new User(); //crear objeto y asi poder darle los datos a insertar
+    var params = req.body; //recoger los datos que se le esta mandando
 
     console.log(params);
 
@@ -54,10 +54,10 @@ function saveUser(req, res) {
 //funcion para loguearse
 function loginUser(req, res) {
     //recoger todos los parametros del body
-    let params = req.body;
+    var params = req.body;
     //tomar el parametro email y password del body
-    let email = params.email;
-    let password = params.password;
+    var email = params.email;
+    var password = params.password;
     //buscar en la base de datos el email y comprobar si existe o no existe
     User.findOne({ email: email.toLowerCase() }, function (err, user) {
         if (err){
@@ -89,8 +89,8 @@ function loginUser(req, res) {
 //funcion para actualizar usuario
 function updateUser(req, res) {
     //recogemos los datos atraves del body
-    let userId = req.params.id;
-    let update = req.body;
+    var userId = req.params.id;
+    var update = req.body;
     //verificamos que el user id consida con el del middleware
     if (userId != req.user.sub) {
         return res.status(500).send({ message: 'No tienes permisos para actualizar usuario' });
@@ -110,16 +110,16 @@ function updateUser(req, res) {
 }
 //funcion para subir imagenes
 function uploadImages(req, res) {
-    let userId = req.params.id; //obtenemos el id del usuario
-    let file_name = 'No Subido...';
+    var userId = req.params.id; //obtenemos el id del usuario
+    var file_name = 'No Subido...';
 
     if (req.files){ //si subio archivo
-        let file_path = req.files.image.path; //obtiene la ruta de la imagen
-        let file_split = file_path.split('\\'); //separa los nombres de la imagen
-        let file_name = file_split[2];
+        var file_path = req.files.image.path; //obtiene la ruta de la imagen
+        var file_split = file_path.split('\\'); //separa los nombres de la imagen
+        var file_name = file_split[2];
 
-        let ext_split = file_name.split('\.');
-        let file_ext = ext_split[1];
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[1];
 
         if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif'){ //si la extension del archivo es valida
             User.findByIdAndUpdate(userId, {image: file_name}, function (err, userUpdated) { //actualiza el usuario añadiendo la imagen del usuario
@@ -140,8 +140,8 @@ function uploadImages(req, res) {
 }
 //funcion para obtener imagen
 function getImageFile(req, res) {
-    let imageFile = req.params.imageFile; //obtenemos el nombre de la imagen
-    let path_file = './uploads/users/'+imageFile; //obtenemos el archivo donde se encuentra la imagen
+    var imageFile = req.params.imageFile; //obtenemos el nombre de la imagen
+    var path_file = './uploads/users/'+imageFile; //obtenemos el archivo donde se encuentra la imagen
 
     fs.exists(path_file, function(exists){//verificamos si existe
         if (exists){

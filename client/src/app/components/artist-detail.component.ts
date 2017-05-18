@@ -7,74 +7,58 @@ import { ArtistService } from '../services/artist.service';
 import { Artist } from '../models/artist';
 
 @Component({
-    selector: 'artist-list',
-    templateUrl: '../views/artist-list.html',
+    selector: 'artist-detail',
+    templateUrl: '../views/artist-detail.html',
     providers: [UserService, ArtistService]
 })
 
-export class ArtistListComponent implements OnInit {
+export class ArtistDetailComponent implements OnInit{
     public titulo: string;
-    public artists: Artist[];
+    public artist: Artist;
     public identity;
     public token;
     public url: string;
-    public next_page;
-    public prev_page;
+    public alertMessage;
 
     constructor(
         private _route: ActivatedRoute,
         private _router: Router,
-        private _artistService: ArtistService,
-        private _userService: UserService
-    ) {
-        this.titulo = 'Artistas';
+        private _userService: UserService,
+        private _artistService: ArtistService
+    ){
         this.identity = this._userService.getIdentity();
         this.token = this._userService.getToken();
         this.url = GLOBAL.url;
-        this.next_page = 1;
-        this.prev_page = 1;
     }
 
-    ngOnInit() {
-        console.log('listado-artistas component CARGANDO');
-
-        //Conseguir el listado de artistas
-        this.getArtists();
+    ngOnInit(){
+        console.log('artist.edit.component.ts LOADING');
+        //llamar al metodo del api para sacar un artista en base a su id
+        this.getArtist();
     }
 
-    getArtists() {
+    getArtist(){
         this._route.params.forEach((params: Params) => {
-            let page = +params['page'];
-            if (!page) {
-                page = 1;
-            } else {
-                this.next_page = page + 1;
-                this.prev_page = page - 1;
+            let id = params['id'];
 
-                if (this.prev_page == 0) {
-                    this.prev_page = 1;
-                }
-            }
-
-            this._artistService.getArtists(this.token, page).subscribe(
+            this._artistService.getArtist(this.token, id).subscribe(
                 response => {
-                    if (!response.artists) {
+                    if(!response.artist){
                         this._router.navigate(['/']);
-                    } else {
-                        this.artists = response.artists;
+                    }else{
+                        this.artist = response.artist;
                     }
                 },
                 error => {
                     var errorMessage = <any>error;
-
+        
                     if (errorMessage != null) {
                         var body = JSON.parse(error._body);
                         //this.alertMessage = body.message;
-
                         console.log(error);
-                    }
+                }    
                 }
-            );
+            )
         });
     }
 }

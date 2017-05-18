@@ -1,13 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-const mongoosePaginate = require('mongoose-pagination');
+var fs = require('fs');
+var path = require('path');
+var mongoosePaginate = require('mongoose-pagination');
 
-let Artist = require('../models/artist');
-let Album = require('../models/album');
-let Song = require('../models/song');
+var Artist = require('../models/artist');
+var Album = require('../models/album');
+var Song = require('../models/song');
 
 function getAlbum(req, res) {
-    let albumId = req.params.id;
+    var albumId = req.params.id;
 
     Album.findById(albumId).populate({ path: 'artist' }).exec(function (err, album) {
         if (err){
@@ -23,8 +23,8 @@ function getAlbum(req, res) {
 }
 
 function saveAlbum(req, res) {
-    let album = new Album();
-    let params = req.body;
+    var album = new Album();
+    var params = req.body;
 
     album.title = params.title;
     album.description = params.description;
@@ -46,7 +46,7 @@ function saveAlbum(req, res) {
 }
 
 function getAlbums(req, res) {
-    let artistaId = req.params.artist;
+    var artistaId = req.params.artist;
 
     if (!artistaId){
         //Sacar todos los albums de la BD
@@ -71,8 +71,8 @@ function getAlbums(req, res) {
 }
 
 function updateAlbum(req, res) {
-    let albumId = req.params.id;
-    let update = req.body;
+    var albumId = req.params.id;
+    var update = req.body;
     
     Album.findByIdAndUpdate(albumId, update, function (err, albumUpdated) {
         if (err) {
@@ -114,16 +114,16 @@ function deleteAlbum(req, res){
 }
 
 function uploadImage(req, res) {
-    let albumId = req.params.id;
-    let file_name = 'No subido';
+    var albumId = req.params.id;
+    var file_name = 'No subido';
 
     if (req.files){
-        let file_path = req.files.image.path;
-        let file_split = file_path.split('\\');
-        let file_name = file_split[2];
+        var file_path = req.files.image.path;
+        var file_split = file_path.split('\\');
+        var file_name = file_split[2];
 
-        let ext_split = file_name.split('\.');
-        let file_ext = ext_split[1];
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[1];
 
         if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif'){
             Album.findByIdAndUpdate(albumId, {image: file_name}, function (err, albumUpdated) {
@@ -144,8 +144,8 @@ function uploadImage(req, res) {
 }
 
 function getImageFile(req, res) {
-    let imageFile = req.params.imageFile;
-    let path_file = './uploads/album/'+imageFile;
+    var imageFile = req.params.imageFile;
+    var path_file = './uploads/album/'+imageFile;
 
     fs.exists(path_file, function(exists){
         if (exists){

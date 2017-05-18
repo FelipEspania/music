@@ -1,9 +1,9 @@
 //llamar a mongoose para utilizar la bd
-const mongoose = require('mongoose');
+var mongoose = require('mongoose');
 //ocupar la funcion schema
-let Schema = mongoose.Schema;
+var Schema = mongoose.Schema;
 //crear el schema
-let UserSchema = Schema({
+var UserSchema = Schema({
     name: String,
     surname: String,
     email: String,

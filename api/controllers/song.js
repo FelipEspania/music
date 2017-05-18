@@ -1,10 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const mongoosePaginate = require('mongoose-pagination');
+var fs = require('fs');
+var path = require('path');
+var mongoosePaginate = require('mongoose-pagination');
 
-let Artist = require('../models/artist');
-let Album = require('../models/album');
-let Song = require('../models/song');
+var Artist = require('../models/artist');
+var Album = require('../models/album');
+var Song = require('../models/song');
 
 function getSong(req, res) {
     var songId = req.params.id;
@@ -108,16 +108,16 @@ function deleteSong(req, res){
 }
 
 function uploadFile(req, res) {
-    let songId = req.params.id;
-    let file_name = 'No subido';
+    var songId = req.params.id;
+    var file_name = 'No subido';
 
     if (req.files){
-        let file_path = req.files.file.path;
-        let file_split = file_path.split('\\');
-        let file_name = file_split[2];
+        var file_path = req.files.file.path;
+        var file_split = file_path.split('\\');
+        var file_name = file_split[2];
 
-        let ext_split = file_name.split('\.');
-        let file_ext = ext_split[1];
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[1];
 
         if (file_ext == 'mp3' || file_ext == 'ogg'){
             Song.findByIdAndUpdate(songId, {file: file_name}, function (err, songUpdated) {
@@ -136,8 +136,8 @@ function uploadFile(req, res) {
 }
 
 function getSongFile(req, res) {
-    let imageFile = req.params.songFile;
-    let path_file = './uploads/songs/'+imageFile;
+    var imageFile = req.params.songFile;
+    var path_file = './uploads/songs/'+imageFile;
 
     fs.exists(path_file, function(exists){
         if (exists){

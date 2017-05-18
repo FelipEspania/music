@@ -1,13 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-const mongoosePaginate = require('mongoose-pagination');
+var fs = require('fs');
+var path = require('path');
+var mongoosePaginate = require('mongoose-pagination');
 
-let Artist = require('../models/artist');
-let Album = require('../models/album');
-let Song = require('../models/song');
+var Artist = require('../models/artist');
+var Album = require('../models/album');
+var Song = require('../models/song');
 
 function getArtist(req, res) {
-    let artistId = req.params.id;
+    var artistId = req.params.id;
 
     Artist.findById(artistId, function (err, artist) {
         if (err){
@@ -22,9 +22,34 @@ function getArtist(req, res) {
     });
 }
 
+function getArtists(req, res){
+	if(req.params.page){
+		var page = req.params.page;
+	}else{
+		var page = 1;
+	}
+
+	var itemsPerPage = 4;
+
+	Artist.find().sort('name').paginate(page, itemsPerPage, function(err, artists, total){
+		if(err){
+			res.status(500).send({message: 'Error en la petición.'});
+		}else{
+			if(!artists){
+				res.status(404).send({message: 'No hay artistas !!'});
+			}else{
+				return res.status(200).send({
+					total_items: total,
+					artists: artists
+				});
+			}
+		}
+	});
+}
+
 function saveArtist(req, res) {
-    let artist = new Artist();
-    let params = req.body;
+    var artist = new Artist();
+    var params = req.body;
 
     artist.name = params.name;
     artist.description = params.description;
@@ -43,33 +68,9 @@ function saveArtist(req, res) {
     });
 }
 
-function getArtists(req, res) {
-    if (req.params.page){
-        var page = req.params.page;
-    }else {
-        var page = 1;
-    }
-    let itemsPerPage = 3;
-
-    Artist.find().sort('name').paginate(page, itemsPerPage, function (err, artists, total) {
-        if (err){
-            res.status(500).send({ message: 'Error en a peticion'});
-        }else {
-            if (!artists){
-                res.status(404).send({ message: 'No hay artistas'});
-            }else {
-                return res.status(200).send({
-                    total_items: total,
-                    artist: artists
-                });
-            }
-        }
-    });
-}
-
 function updateArtist(req, res){
-    let artistId = req.params.id;
-    let update = req.body;
+    var artistId = req.params.id;
+    var update = req.body;
 
     Artist.findByIdAndUpdate(artistId, update, function (err, artistUpdated) {
         if (err){
@@ -86,7 +87,7 @@ function updateArtist(req, res){
 }
 
 function deleteArtist(req, res){
-    let artistId = req.params.id;
+    var artistId = req.params.id;
 
     Artist.findByIdAndRemove(artistId, function (err, artistRemoved) {
         if (err){
@@ -122,16 +123,16 @@ function deleteArtist(req, res){
 }
 
 function uploadImage(req, res) {
-    let artistId = req.params.id;
-    let file_name = 'No subido';
+    var artistId = req.params.id;
+    var file_name = 'No subido';
 
     if (req.files){
-        let file_path = req.files.image.path;
-        let file_split = file_path.split('\\');
-        let file_name = file_split[2];
+        var file_path = req.files.image.path;
+        var file_split = file_path.split('\\');
+        var file_name = file_split[2];
 
-        let ext_split = file_name.split('\.');
-        let file_ext = ext_split[1];
+        var ext_split = file_name.split('\.');
+        var file_ext = ext_split[1];
 
         if (file_ext == 'png' || file_ext == 'jpg' || file_ext == 'gif'){
             Artist.findByIdAndUpdate(artistId, {image: file_name}, function (err, artistUpdated) {
@@ -152,8 +153,8 @@ function uploadImage(req, res) {
 }
 
 function getImageFile(req, res) {
-    let imageFile = req.params.imageFile;
-    let path_file = './uploads/artists/'+imageFile;
+    var imageFile = req.params.imageFile;
+    var path_file = './uploads/artists/'+imageFile;
 
     fs.exists(path_file, function(exists){
         if (exists){
